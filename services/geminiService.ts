@@ -1,9 +1,23 @@
 
 import { GoogleGenAI } from "@google/genai";
 
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY || '' });
+// Safeguard against 'process' not being defined in browser environments
+const getApiKey = () => {
+  try {
+    return typeof process !== 'undefined' ? process.env.API_KEY : '';
+  } catch (e) {
+    return '';
+  }
+};
+
+const ai = new GoogleGenAI({ apiKey: getApiKey() || '' });
 
 export const generateStudioManifesto = async (): Promise<string> => {
+  const apiKey = getApiKey();
+  if (!apiKey) {
+    return "Forging digital legacies with precision and artistic vision for the future.";
+  }
+
   try {
     const response = await ai.models.generateContent({
       model: 'gemini-3-flash-preview',
@@ -21,6 +35,11 @@ export const generateStudioManifesto = async (): Promise<string> => {
 };
 
 export const generateDetailedServiceInfo = async (serviceTitle: string): Promise<string> => {
+  const apiKey = getApiKey();
+  if (!apiKey) {
+    return "Our approach combines local soul with international standards, ensuring every frame tells a story of precision.";
+  }
+
   try {
     const response = await ai.models.generateContent({
       model: 'gemini-3-flash-preview',
